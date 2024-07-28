@@ -2,6 +2,9 @@ const path = require('path');
 const { defineConfig } = require('@vue/cli-service')
 module.exports = defineConfig({
   transpileDependencies: true,
+  outputDir: 'docs',
+  assetsDir: './',
+  publicPath: './',
   chainWebpack (config) {
     // Remove existing SVG rule which uses file-loader
     config.module.rules.delete('svg')
