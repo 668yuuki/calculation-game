@@ -1,4 +1,4 @@
-# keisan-game-project
+# calculation-game
 
 ## Project setup
 ```
