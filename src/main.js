@@ -1,7 +1,5 @@
 // import { createApp } from 'vue'
 // import App from './App.vue'
-// impo
-
 // const app = createApp(App).mount('#app');
 
 
@@ -16,10 +14,12 @@ import * as directives from 'vuetify/directives'
 // Components
 import App from './App.vue'
 
+import store from './store/index'
+
 const vuetify = createVuetify({
   components,
   directives,
 })
 
-createApp(App).use(vuetify).mount('#app')
+createApp(App).use(vuetify).use(store).mount('#app')
 

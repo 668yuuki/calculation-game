@@ -2,11 +2,12 @@
   <g :transform="`translate(${pos.x},${pos.y})  scale(${scale})`">
     <image :href="require('@assets/enemy.png')" height="50" width="50" id="enemy"/>
     <text x="0" y="35" font-family="Verdana" font-size="10" fill="yellow">
-      {{ question }}
+      {{ getQuestionText }}
     </text>
   </g>
 </template>
 <script>
+import { mapGetters, mapActions } from "vuex"
 export default {
   name: "EnemyComponent",
   data: () => ({
@@ -19,14 +20,10 @@ export default {
       y: 0,
     },
     scale: 1,
-    answer: 0,
-    questionText: "",
     enemyIntervalId: 0,
   }),
   computed: {
-    question() {
-      return this.questionText;
-    }
+    ...mapGetters(["getQuestionText", "isInitEnemy", "isMoveEnemy"]),
   },
   mounted() {
     const path = document.querySelector("#enemy");
@@ -36,8 +33,24 @@ export default {
     centerOffset.x = 0;
     centerOffset.y = bbox.height;
     this.makeQuestion();
+    this.updateEnemy({ pos: this.pos, centerOffset});
+  },
+  watch: {
+    isInitEnemy(newVal) {
+      if (newVal) {
+        this.init();
+        this.clearInitEnemyFlag();
+      }
+    },
+    isMoveEnemy(newVal) {
+      if (newVal) {
+        this.moveEnemyTowardsPlayer();
+        this.clearMoveEnemyFlag();
+      }
+    }
   },
   methods: {
+    ...mapActions(["makeQuestion", "updateEnemy", "clearInitEnemyFlag", "clearMoveEnemyFlag"]),
     moveEnemyTowardsPlayer() {
       this.enemyIntervalId = setInterval(() => {
         const pos = this.pos;
@@ -50,11 +63,8 @@ export default {
         const centerOffset = this.centerOffset;
         centerOffset.x = 0;
         centerOffset.y = bbox.height;
-        this.$emit("updatePos");
+        this.updateEnemy({ pos: this.pos, centerOffset});
       }, 1000);
-    },
-    number1to10() {
-      return Math.floor( Math.random() * 9) + 1
     },
     stopEnemyTowardsPlayer() {
       clearInterval(this.enemyIntervalId);
@@ -71,12 +81,6 @@ export default {
       this.makeQuestion();
       this.moveEnemyTowardsPlayer()
     },
-    makeQuestion() {
-      const x = this.number1to10();
-      const y = this.number1to10();
-      this.questionText = `${x} × ${y}`;
-      this.answer = x * y;
-    }
   },
 };
 </script>

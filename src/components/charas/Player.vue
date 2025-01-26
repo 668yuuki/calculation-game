@@ -4,7 +4,7 @@
   </g>
 </template>
 <script>
-
+import { mapActions } from "vuex"
 export default {
   name: "PlayerComponent",
   data: () => ({
@@ -24,11 +24,10 @@ export default {
     const centerOffset = this.centerOffset
     centerOffset.x = bbox.x / 2;
     centerOffset.y = bbox.y / 2;
+    this.updatePlayer({ pos: this.pos, centerOffset });
   },
   methods: {
-    throwBall() {
-      this.$emit("throwBall")
-    },
+    ...mapActions(["updatePlayer"]),
   },
 }
 </script>
